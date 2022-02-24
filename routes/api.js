@@ -91,10 +91,10 @@ router.post("/add-new-friends", (req, res) => {
 /* Post request for /add-new-friends ends */
 
 /* Delete request for /add-new-friends/:id starts */
-router.delete("/api/add-new-friends/:id", (req, res) => {
-  const id = new objectId(req.params.id);
+router.delete("/add-new-friends/:id", (req, res) => {
+  const id = +req.params.id;
 
-  Friend.findOneAndDelete({ _id: id }, (err, result) => {
+  Friend.findOneAndDelete({ id: id }, (err, result) => {
     if (err) return console.log(err);
     let friend = result.value;
     res.send(friend);
@@ -103,10 +103,10 @@ router.delete("/api/add-new-friends/:id", (req, res) => {
 /* Delete request for /add-new-friends/:id ends */
 
 /* Put request for /add-new-friends starts */
-router.put("/api/add-new-friends", jsonParser, (req, res) => {
+router.put("/add-new-friends", (req, res) => {
   if (!req.body) return res.sendStatus(400);
 
-  const id = new objectId(req.body.id);
+  const id = req.body.id;
   const fullName = req.body.fullName;
   const email = req.body.email;
   const address = req.body.address;
@@ -115,9 +115,10 @@ router.put("/api/add-new-friends", jsonParser, (req, res) => {
   const gender = req.body.gender;
 
   Friend.findOneAndUpdate(
-    { _id: id },
+    { id: id},
     {
       $set: {
+        id: id,
         fullName: fullName,
         email: email,
         address: address,
@@ -126,9 +127,10 @@ router.put("/api/add-new-friends", jsonParser, (req, res) => {
         gender: gender,
       },
     },
-    { returnDocument: "after" },
+    { returnDocument: "after", new: true },
     (err, result) => {
       if (err) return console.log(err);
+      console.log(result);
       const friend = result.value;
       res.send(friend);
     }
@@ -159,5 +161,7 @@ router.post("/new-credit", (req, res) => {
   });
 });
 /* POST request for /new-credit ends */
+
+
 
 module.exports = router;
