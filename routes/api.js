@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const jsonParser = express.json;
 const User = require("../models/user"); //Можно сразу через User обращаться ко всем методам mongodb
 const Friend = require("../models/friends"); //Можно сразу через Friend обращаться ко всем методам mongodb
 const Loan = require("../models/loan");
 const mongoose = require("mongoose");
-const objectId = require("mongodb").ObjectId;
 const url =
   "mongodb+srv://Orhan:Mamedov03Danskih09@cluster0.md34d.mongodb.net/LoanAppDb?retryWrites=true&w=majority";
 
@@ -28,7 +26,7 @@ router.post("/register", (req, res) => {
       console.log(err);
     } else {
       res.status(200).send(registeredUser);
-    }
+    };
   });
 });
 /* Post request for /register ends */
@@ -48,9 +46,9 @@ router.post("/login", (req, res) => {
           res.status(401).send("Invalid password");
         } else {
           res.status(200).send(user);
-        }
-      }
-    }
+        };
+      };
+    };
   });
 });
 /* Post request for /login ends */
@@ -59,7 +57,10 @@ router.post("/login", (req, res) => {
 router.get("/add-new-friends", (req, res) => {
   /* Через Friend обращаемся сразу к методу find({}) */
   Friend.find({}, (err, friend) => {
-    if (err) return console.log(err);
+    if (err) {
+      return console.log(err);
+    };
+
     res.send(friend);
   });
 });
@@ -70,7 +71,10 @@ router.get("/add-new-friends/:id", (req, res) => {
   const id = +req.params.id;
   /* Через Friend обращаемся сразу к методу findOne({}) */
   Friend.findOne({ id: id }, (err, friend) => {
-    if (err) return console.log(err);
+    if (err) {
+      return console.log(err);
+    };
+
     res.send(friend);
   });
 });
@@ -80,12 +84,13 @@ router.get("/add-new-friends/:id", (req, res) => {
 router.post("/add-new-friends", (req, res) => {
   let friendData = req.body;
   let friend = new Friend(friendData);
+  
   friend.save((err, createFriend) => {
     if (err) {
       console.log(err);
     } else {
       res.status(200).send(createFriend);
-    }
+    };
   });
 });
 /* Post request for /add-new-friends ends */
@@ -95,8 +100,11 @@ router.delete("/add-new-friends/:id", (req, res) => {
   const id = +req.params.id;
 
   Friend.findOneAndDelete({ id: id }, (err, result) => {
-    if (err) return console.log(err);
-    let friend = result.value;
+    if (err) {
+      return console.log(err);
+    };
+
+    let friend = result;
     res.send(friend);
   });
 });
@@ -115,7 +123,7 @@ router.put("/add-new-friends", (req, res) => {
   const gender = req.body.gender;
 
   Friend.findOneAndUpdate(
-    { id: id},
+    { id: id },
     {
       $set: {
         id: id,
@@ -129,8 +137,10 @@ router.put("/add-new-friends", (req, res) => {
     },
     { returnDocument: "after", new: true },
     (err, result) => {
-      if (err) return console.log(err);
-      console.log(result);
+      if (err) {
+        return console.log(err);
+      }
+
       const friend = result.value;
       res.send(friend);
     }
@@ -142,7 +152,10 @@ router.put("/add-new-friends", (req, res) => {
 router.get("/new-credit", (req, res) => {
   /* Через Friend обращаемся сразу к методу find({}) */
   Loan.find({}, (err, loan) => {
-    if (err) return console.log(err);
+    if (err) {
+      return console.log(err);
+    };
+
     res.send(loan);
   });
 });
@@ -157,11 +170,9 @@ router.post("/new-credit", (req, res) => {
       console.log(err);
     } else {
       res.status(200).send(openLoan);
-    }
+    };
   });
 });
 /* POST request for /new-credit ends */
-
-
 
 module.exports = router;
