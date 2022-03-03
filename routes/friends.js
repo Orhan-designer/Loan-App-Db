@@ -14,8 +14,9 @@ router.get("/friends", (req, res) => {
     });
   });
 
-router.get("/friends/:id", (req, res) => {
+router.post("/friends/:id", (req, res) => {
   let id = req.params.id;
+  let data = req.body.searchValue.toLowerCase();
   console.log(id);
   User.findOne({ _id: id }, (err, user) => {
     console.log(user);
@@ -24,8 +25,16 @@ router.get("/friends/:id", (req, res) => {
       res.status(400).send("Error");
     } else {
       console.log(user.friends);
-      res.status(200).send(user.friends);
-    }
+      if(data === '') {
+        res.status(200).send(user.friends);
+      } else {
+        let filteredData = user.friends
+          .filter((el) => el.email.toLowerCase().includes(data) || 
+                            el.firstName.toLowerCase().includes(data) || 
+                              el.lastName.toLowerCase().includes(data));
+        res.status(200).send(filteredData);
+      }
+    } 
   });
 });
 /* Get request for /friends/:id ends */
