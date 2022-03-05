@@ -4,15 +4,15 @@ const Friend = require("../models/friends"); //Можно сразу через 
 const User = require("../models/user"); //Можно сразу через User обращаться ко всем методам mongodb
 
 router.get("/friends", (req, res) => {
-    /* Через Friend обращаемся сразу к методу find({}) */
-    Friend.findOne({email: email}, (err, user) => {
-      if (err) {
-        return console.log(err);
-      };
-  
-      res.send(user);
-    });
+  /* Через Friend обращаемся сразу к методу find({}) */
+  Friend.findOne({ email: email }, (err, user) => {
+    if (err) {
+      return console.log(err);
+    }
+
+    res.send(user);
   });
+});
 
 router.post("/friends/:id", (req, res) => {
   let id = req.params.id;
@@ -25,16 +25,18 @@ router.post("/friends/:id", (req, res) => {
       res.status(400).send("Error");
     } else {
       console.log(user.friends);
-      if(data === '') {
+      if (data === "") {
         res.status(200).send(user.friends);
       } else {
-        let filteredData = user.friends
-          .filter((el) => el.email.toLowerCase().includes(data) || 
-                            el.firstName.toLowerCase().includes(data) || 
-                              el.lastName.toLowerCase().includes(data));
+        let filteredData = user.friends.filter(
+          (el) =>
+            el.email.toLowerCase().includes(data) ||
+            el.firstName.toLowerCase().includes(data) ||
+            el.lastName.toLowerCase().includes(data)
+        );
         res.status(200).send(filteredData);
       }
-    } 
+    }
   });
 });
 /* Get request for /friends/:id ends */

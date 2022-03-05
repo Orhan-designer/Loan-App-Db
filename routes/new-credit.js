@@ -15,7 +15,7 @@ router.post("/new-credit", (req, res) => {
       password: '',
       friends: [],
       email: ''
-    }
+    };
     console.log(newUser)
     let user = new User(newUser);
     user.save();
