@@ -6,17 +6,15 @@ const User = require("../models/user");
 /* POST request for /new-credit starts */
 router.post("/new-credit", (req, res) => {
   let loanData = req.body;
-  if(!loanData.secondPerson.id) {
-    console.log(loanData)
-    let arr = loanData.secondPerson.name.split(' ');
+  if (!loanData.secondPerson.id) {
+    let arr = loanData.secondPerson.name.split(" ");
     let newUser = {
       firstName: arr[0],
-      lastName: arr[1] ? arr[1] : '',
-      password: '',
+      lastName: arr[1] ? arr[1] : "",
+      password: "",
       friends: [],
-      email: ''
+      email: "",
     };
-    console.log(newUser)
     let user = new User(newUser);
     user.save();
   }

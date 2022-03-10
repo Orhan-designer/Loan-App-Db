@@ -3,18 +3,15 @@ const router = express.Router();
 const User = require("../models/user"); //Можно сразу через User обращаться ко всем методам mongodb
 
 /* Post request for /add-new-friend starts */
-router.post("/add-new-friend", (req, res) => {
-  console.log(req.body);
-  let email = req.body.email;
-  let id = req.body.id;
+router.post("/add-new-friend", async (req, res) => {
+  const email = req.body.email; //email пользователя которого хочу добавить
+  const id = req.body.id; //мой id 
   console.log("email", email);
   console.log("id", id);
   User.findOne({ email: email }, (err, friend) => {
-    console.log("friend before save", friend);
     if (err) {
-      console.log(err);
       res.status(400).send("Error");
-    }
+    };
     if (!friend) {
       res.status(200).send("User not found");
     } else {
@@ -24,17 +21,16 @@ router.post("/add-new-friend", (req, res) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          phone: user.phone
         };
         let myFriend = {
           _id: friend.id,
           email: friend.email,
           firstName: friend.firstName,
           lastName: friend.lastName,
+          phone: friend.phone
         };
-        console.log("friend after save", friend);
-        console.log(user, "user before save");
         if (err) {
-          console.log(err);
           res.status(400).send({ error: "Error" });
         } else {
           let addedFriend = user.friends.find((el) => {
@@ -47,12 +43,11 @@ router.post("/add-new-friend", (req, res) => {
             friend.save();
             user.friends.push(myFriend);
             user.save();
-            console.log(user, "user after save");
             res.status(200).send({ success: "Friend has been added." });
-          }
-        }
+          };
+        };
       });
-    }
+    };
   });
 });
 /* Post request for /add-new-friend ends */

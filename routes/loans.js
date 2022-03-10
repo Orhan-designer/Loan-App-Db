@@ -11,7 +11,7 @@ router.get("/loans/:id", (req, res) => {
       return console.log(err);
     } else {
       res.send(loans);
-    }
+    };
   });
 });
 /* Get request for /loans/:id ends */
@@ -25,7 +25,7 @@ router.post("/loans/user", (req, res) => {
       return console.log(err);
     } else {
       res.send(loans);
-    }
+    };
   });
 });
 /* POST request for /loans/user ends */

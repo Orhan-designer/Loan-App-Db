@@ -3,8 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const url =
-  "mongodb+srv://Orhan:Mamedov03Danskih09@cluster0.md34d.mongodb.net/LoanAppDb?retryWrites=true&w=majority";
-const User = require('../models/user');
+  "mongodb+srv://Orhan:Mamedov03Danskih09@cluster0.md34d.mongodb.net/LoanAppDb?retryWrites=true&w=majority"; 
 
 mongoose.connect(url, (err, client) => {
   if (err) return console.error(err);
@@ -33,29 +32,6 @@ function verifyUser(req, res, next) {
 
   req.userId = payload.subject;
   next();
-}
-
-//Нужно сделать апи для гост профиля, чтобы добавлялся в базу при отправлении
-//его в список друзей
-function addGhostFriend(req, res, next) {
-  console.log(myId)
-  let myId = req.body.id;
-
-  User.find({_id: id}, (err, user) => {
-    if (!myId) {
-      console.log(myId)
-      return console.log(err);
-    } else {
-      let newUser = {
-        firstName: arr[0],
-        lastName: arr[1] ? arr[1] : '',
-        password: '',
-        friends: [],
-        email: ''
-      };
-    }
-
-  })
 }
 
 module.exports = router;

@@ -10,9 +10,9 @@ const login = require('./routes/login');
 const newCredit = require('./routes/new-credit');
 const register = require('./routes/register');
 const users = require('./routes/users');
+const ghostProfile = require('./routes/ghost-profile');
 
 const PORT = process.env.PORT || 3000;
-/* Connect to DB */
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -25,6 +25,8 @@ app.use('/api', login);
 app.use('/api', newCredit);
 app.use('/api', register);
 app.use('/api', users);
+app.use('/api', ghostProfile);
+
 
 
 app.get("/", (req, res) => {
