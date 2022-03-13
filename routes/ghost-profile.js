@@ -2,37 +2,32 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 
-router.post("/add-new-friend/ghost-profile", (req, res) => {
-  const email = req.body.email; //email пользователя которого хочу добавить
-  const id = req.body.id; //мой id
-  console.log("Email", email);
-  console.log("id", id);
+router.post("/add-new-friend/ghost-profile", async (req, res) => {
+  const currentUserId = req.body.id; //мой айди
+  const ghostUserEmail = req.body.email; //емейл Ghost пользователя
+  const currentUser = await User.findOne({ _id: currentUserId }).exec(); //объявляю переменную в которой я делаю поиск по своему айди
 
-  const newGhostUser = new User({
-    email: req.body.email,
+  if (!currentUser) {
+    //проверяю, существует ли мой айди в базе, если нет, то выбрасываю ошибку
+    res.status(400).send(`user with this id ${currentUserId} does not exist`);
+  }
+
+  /* Создаю нового Ghost пользователя */
+  const createdGhostUser = await User.create({
+    isGhost: true,
+    email: ghostUserEmail,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    phone: req.body.phone
   });
-  //перехватываем ошибку, если она возникает
 
-  User.findOne({ email: email }, async (err, friend) => {
-    if (err) {
-      res.status(400).send({ error: err });
-    } else {
-      let addGhostFriend = friend.friends.find((el) => {
-        el.email === friend.email;
-      });
-      if (addGhostFriend) {
-        friend.push(newGhostUser);
-        friend.save();
-      }
-    }
-
-    try {
-      const user = await newGhostUser;
-      res.status(200).json(user);
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  //добавляю Ghost юзера себе в коллекцию friends
+  currentUser.friends.push(createdGhostUser);
+  await User.findOneAndUpdate(
+    { _id: currentUserId },
+    { $set: { friends: currentUser.friends } }
+  ).exec();
+  res.status(200).send("ghost user was added");
 });
 
 module.exports = router;

@@ -27,10 +27,8 @@ app.use('/api', register);
 app.use('/api', users);
 app.use('/api', ghostProfile);
 
-
-
 app.get("/", (req, res) => {
-  res.send("Hello from server");
+  res.send("You are located on server");
 });
 
 app.listen(PORT, () => {

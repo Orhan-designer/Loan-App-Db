@@ -10,7 +10,7 @@ const LoanSchema = new Schema({
   howMuch: Number,
   reason: String,
   userId: String,
-  date: Date
+  date: Date,
 });
 
 module.exports = mongoose.model("loan", LoanSchema, "loans");

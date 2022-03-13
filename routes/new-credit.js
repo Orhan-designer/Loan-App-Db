@@ -4,28 +4,32 @@ const Loan = require("../models/loan");
 const User = require("../models/user");
 
 /* POST request for /new-credit starts */
-router.post("/new-credit", (req, res) => {
-  let loanData = req.body;
-  if (!loanData.secondPerson.id) {
-    let arr = loanData.secondPerson.name.split(" ");
-    let newUser = {
-      firstName: arr[0],
-      lastName: arr[1] ? arr[1] : "",
-      password: "",
-      friends: [],
-      email: "",
-    };
-    let user = new User(newUser);
-    user.save();
-  }
-  let loan = new Loan(loanData);
-  loan.save((err, openLoan) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.status(200).send(openLoan);
+router.post("/new-credit", async (req, res) => {
+  try {
+    const loanData = req.body;
+    if (!loanData.secondPerson.id) {
+      const arr = loanData.secondPerson.name.split(" ");
+      const newUser = {
+        firstName: arr[0],
+        lastName: arr[1] ? arr[1] : "",
+        password: "",
+        friends: [],
+        email: "",
+      };
+      const user = await new User(newUser);
+      user.save();
     }
-  });
+    const loan = await new Loan(loanData);
+    loan.save();
+
+    if (!loan) {
+      res.status(400).send({ error: "New credit cannot be founded" });
+    }
+
+    res.status(200).send(loan);
+  } catch (error) {
+    res.status(500).send({ error: "New credit cannot execute request" });
+  }
 });
 /* POST request for /new-credit ends */
 
