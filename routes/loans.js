@@ -38,6 +38,30 @@ router.post("/loans/user", async (req, res) => {
     res.status(500).send("Loan user cannot execute request");
   }
 });
+
+router.post("/repay", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const sum = req.body.sum;
+    let loan = await Loan.findOne({
+      _id: id,
+    }).exec();
+    console.log(loan);
+    if (!loan) {
+      res.status(400).send("Loan user not be founded");
+    }
+    loan.history.push(`+${sum}`);
+    loan.total = +loan.total + sum;
+    if (+loan.total >= 0) {
+      loan.howMuch = +loan.howMuch * -1;
+    }
+    loan.save();
+    res.status(200).send({ status: "Success" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Loan user cannot execute request");
+  }
+});
 /* POST request for /loans/user ends */
 
 module.exports = router;

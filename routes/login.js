@@ -10,12 +10,12 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: userData.email }).exec();
 
     if (!user) {
-      res.status(401).send({ error: "Invalid email" });
+      res.status(401).send({ error: "Invalid email, please enter a valid email" });
     }
     const isMatch = await bcrypt.compare(userData.password, user.password);
 
     if (!isMatch) {
-      res.status(401).send({ error: "Invalid password" });
+      res.status(401).send({ error: "Invalid password, please enter a valid password" });
     }
 
     const payload = { subject: user._id };

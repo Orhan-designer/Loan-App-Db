@@ -19,7 +19,7 @@ class UserService {
     }
 
     const currentUser = await UserModel.findOne({ _id: currentUserId }).exec();
-    
+
     if (!currentUser) {
       const error = new Error();
       error.statusCode = 400;

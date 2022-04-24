@@ -19,6 +19,7 @@ router.post("/new-credit", async (req, res) => {
       const user = await new User(newUser);
       user.save();
     }
+    loanData.total = loanData.howMuch;
     const loan = await new Loan(loanData);
     loan.save();
 

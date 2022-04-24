@@ -11,6 +11,8 @@ const LoanSchema = new Schema({
   reason: String,
   userId: String,
   date: Date,
+  total: Number,
+  history: Array,
 });
 
 module.exports = mongoose.model("loan", LoanSchema, "loans");
